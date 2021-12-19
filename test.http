@@ -1,0 +1,26 @@
+POST http://localhost:5000/api/v1/auth/register
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "123456"
+
+}
+
+###
+POST http://localhost:5000/api/v1/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "123456"
+
+}
+
+###
+
+POST http://localhost:5000/api/v1/auth/refresh
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzODcxNDEzOCwianRpIjoiMDcwZmUyMGUtMTdiZi00NDUyLTkyMDktZTM3MTViMjNkZDVjIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOjIsIm5iZiI6MTYzODcxNDEzOCwiZXhwIjoxNjQxMzA2MTM4fQ.uKBw66cfZmACjpJFHXc-NfIXrSMiGOVJi6711VTSsmY
+Content-Type: application/json
+
+
