@@ -1,0 +1,27 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js set version berry
+
+PATH: 
+  D:\Python39\Scripts\;D:\Python39\;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\libnvvp;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\LLVM\bin;C:\Program Files\NVIDIA Corporation\Nsight Compute 2020.3.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Yarn\bin\;C:\ProgramData\nvm;C:\Program Files\nodejs;C:\Users\wlmwwx\.platformio\penv\Scripts;C:\Program Files (x86)\NetSarang\Xshell 7\;C:\Program Files\CMake\bin;D:\Program Files\Go\bin;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\wlmwwx\AppData\Local\Microsoft\WindowsApps;C:\Users\wlmwwx\AppData\Roaming\npm;C:\Users\wlmwwx\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\wlmwwx\.dotnet\tools;C:\Users\wlmwwx\go\bin;C:\myapps\cuda\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\extras\CUPTI\lib64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\include;;C:\Program Files\JetBrains\GoLand 2020.3.2\bin;;C:\Program Files\heroku\bin;C:\Users\wlmwwx\AppData\Local\Yarn\bin;C:\Users\wlmwwx\AppData\Local\Programs\Fiddler;C:\Users\wlmwwx\.dotnet\tools;C:\Program Files (x86)\mitmproxy\bin;C:\Users\wlmwwx\go\bin
+
+Yarn version: 
+  1.22.5
+
+Node version: 
+  14.15.5
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: getaddrinfo ENOENT raw.githubusercontent.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:67:26)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

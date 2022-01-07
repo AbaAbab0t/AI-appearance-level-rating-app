@@ -1,5 +1,7 @@
+from datetime import datetime,timedelta
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 
 
 class Config:
@@ -25,21 +27,27 @@ class Config:
 
     # jwt
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt-key'
-    JWT_COOKIE_CSRF_PROTECT = True
-    JWT_CSRF_CHECK_FORM = True
-    JWT_ACCESS_TOKEN_EXPIRES = os.environ.get(
-        'JWT_ACCESS_TOKEN_EXPIRES') or 3600
+    JWT_COOKIE_CSRF_PROTECT = os.environ.get('JWT_COOKIE_CSRF_PROTECT') or True
+    JWT_CSRF_CHECK_FORM = os.environ.get('JWT_CSRF_CHECK_FORM') or True
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES') or  15))
+    JWT_REFRESH_TOKEN_EXPIRES=timedelta(hours=int(os.environ.get('JWT_REFRESH_TOKEN_EXPIRES') or 14))
     PROPAGATE_EXCEPTIONS = True
-    JWT_REFRESH_DAYS = 30
-    JWT_EXPIRY_HOURS = 24
-    JWT_SECRET = os.environ.get('JWT_SECRET') or '13579'
+    # JWT_REFRESH_DAYS = 30
+    # JWT_EXPIRY_HOURS = 24
+    # JWT_SECRET = os.environ.get('JWT_SECRET') or '13579'
 
     # AI
     AI_FACE_MARK_URL = os.environ.get(
-        'AI_FACE_MARK_URL') or 'http://127.0.0.1:5000/face_mark'
+        'AI_FACE_MARK_URL') or 'http://127.0.0.1:5000/ai/face_mark'
     AI_FACE_MASK_URL = os.environ.get(
-        'AI_FACE_MARK_URL') or 'http://127.0.0.1:5000/face_mask'
-
+        'AI_FACE_MARK_URL') or 'http://127.0.0.1:5000/ai/face_mask'
+    AI_FACE_MASK_IMAGE_URL = os.environ.get(
+        'AI_FACE_MASK_IMAGE_URL') or 'http://wlmwwx.duckdns.org:26880/ai/face_mask_image'
+    AI_FACE_LANDMARK_URL = os.environ.get(
+        'AI_FACE_LANDMARK_URL') or 'http://127.0.0.1:5000/ai/face_landmask'
+    AI_FACE_FEATURE_URL = os.environ.get(
+        'AI_FACE_FEATURE_URL') or 'http://wlmwwx.duckdns.org:26880/ai/face_feature'
+    
     @staticmethod
     def init_app(app):
         pass
@@ -138,6 +146,5 @@ config = {
     'heroku': HerokuConfig,
     'docker': DockerConfig,
     'unix': UnixConfig,
-
     'default': DevelopmentConfig
 }

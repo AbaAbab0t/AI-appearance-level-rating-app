@@ -1,12 +1,15 @@
 from flask import jsonify, request, current_app, url_for
+from numpy.lib.function_base import average
 from . import api
 from ..models import User, Post, Follow, Favorite, Likes
 from ..import db
 from flask_cors import CORS, cross_origin
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from .. import rdb1
+import json
 
 @api.route('/users/<int:id>', methods=["GET"])#获取用户信息
-@cross_origin()
+# @cross_origin()
 def get_user(id):
     user = User.query.get_or_404(id)
     return jsonify(user.to_json())
@@ -14,7 +17,7 @@ def get_user(id):
 
 
 @api.route('/users/<int:id>/posts')#获取用户文章 参数page页数
-@cross_origin()
+# @cross_origin()
 def get_user_posts(id):
     user = User.query.get_or_404(id)
     Posts = db.session.query(Post).filter_by(author_id=id).order_by(Post.timestamp.desc()).all()
@@ -42,7 +45,7 @@ def get_user_posts(id):
 
 
 @api.route('/users/<int:id>/followers', methods=['GET']) #获取粉丝信息
-@cross_origin()
+# @cross_origin()
 def get_user_follower(id):
     follows = db.session.query(Follow).filter(Follow.followed_id==id).all()
     userDatas=[]
@@ -74,7 +77,7 @@ def get_user_follower(id):
     # })
 
 @api.route('/users/<int:id>/followed', methods=['GET']) #获取关注的用户信息
-@cross_origin()
+# @jwt_required()
 def get_user_followed(id):
     follows = db.session.query(Follow).filter(Follow.follower_id == id).order_by(Follow.timestamp.desc()).all()
     userDatas = []
@@ -106,7 +109,7 @@ def get_user_followed(id):
     # })
 
 @api.route('/users/<int:id>/follow', methods=['POST']) #关注用户
-@cross_origin()
+# @cross_origin()
 def user_follow(id):
     follow = Follow.from_json(request.json)
     db.session.add(follow)
@@ -114,7 +117,7 @@ def user_follow(id):
     return jsonify(follow.to_json())
 #
 @api.route('/users/<int:id>/unfollow', methods=['DELETE']) #取消关注
-@cross_origin()
+# @cross_origin()
 def user_unfollow(id):
     follower_id = request.json.get("follower_id")
     followed_id = request.json.get("followed_id")
@@ -123,7 +126,7 @@ def user_unfollow(id):
     return jsonify({"message":"success"})
 
 @api.route('/users/<int:id>/followedUserPosts', methods=['GET']) #获取用户关注的用户的文章及关注的用户信息
-@cross_origin()
+# @cross_origin()
 def get_user_followeds_posts(id):
     user = User.query.get_or_404(id)
     #posts = user.followed_posts.order_by(Post.timestamp.desc()).all()
@@ -149,7 +152,7 @@ def get_user_followeds_posts(id):
     })
 
 @api.route('/users/<int:id>/favorPost', methods=['POST']) #收藏文章
-@cross_origin()
+# @cross_origin()
 def favor_post(id):
     favorite = Favorite.from_json(request.json)
     db.session.add(favorite)
@@ -157,7 +160,7 @@ def favor_post(id):
     return jsonify({"message":"success"})
 
 @api.route('/users/<int:id>/unfavorPost', methods=['DELETE']) #取消收藏文章
-@cross_origin()
+# @cross_origin()
 def unfavor_post(id):
     user_id = request.json.get("user_id")
     post_id = request.json.get("post_id")
@@ -166,7 +169,7 @@ def unfavor_post(id):
     return jsonify({"message": "success"})
 
 @api.route('/users/<int:id>/favor_posts') #获取用户收藏的文章
-@cross_origin()
+# @cross_origin()
 def get_user_followed_posts(id):
     user = User.query.get_or_404(id)
     posts = user.favor_posts.order_by(Post.timestamp.desc()).all()
@@ -195,7 +198,7 @@ def get_user_followed_posts(id):
 
 
 @api.route('/users/<int:id>/likePost', methods=['POST']) #点赞
-@cross_origin()
+# @cross_origin()
 def like_post(id):
     # like = Likes.from_json(request.json)
     post_id = request.json.get("post_id")
@@ -206,7 +209,7 @@ def like_post(id):
 
 
 @api.route('/users/<int:id>/unlikePost', methods=['DELETE'])#取消点赞
-@cross_origin()
+# @cross_origin()
 def unlike_post(id):
     user_id = request.json.get("user_id")
     post_id = request.json.get("post_id")
@@ -215,7 +218,7 @@ def unlike_post(id):
     return jsonify({"message": "success"})
 
 @api.route('/users/<int:id>/likedPosts', methods=['GET'])#获取用户点赞过的文章id
-@cross_origin()
+# @cross_origin()
 def get_user_liked_posts_id(id):
     likes = db.session.query(Likes).filter_by(user_id=id).all()
     return jsonify({
@@ -257,7 +260,51 @@ def get_followed_user_id(id):
         "id": [user.id for user in userDatas]
     })
 
+def get_avasta(avatar):
+    if avatar.startswith('http'):
+        avatar = avatar
+    else:
+        avatar = url_for('static', filename=avatar)
+    return avatar
 
+@api.route('/users/info/<int:id>') #获取用户信息
+#@jwt_required()
+def get_user_info(id):
+    cur_id = id
+    #cur_id=get_jwt_identity()
+    cur_user = User.query.get_or_404(cur_id)
+    cur_avatar=get_avasta(cur_user.avatar)
+
+
+    recommands=json.loads(rdb1.get(cur_id))
+    recommandation=[]
+    for id,sim in recommands.items():
+        user = User.query.get_or_404(id)
+        avatar=get_avasta(user.avatar)
+        username=user.username
+        recommandation.append({"id":id,"avatar":avatar,"username":username,"sim":sim})
+
+    return jsonify({
+    "id": cur_id,
+    "username": cur_user.username,
+    "beauty": cur_user.face_rank,
+    "avatar":cur_avatar,
+    "recommandation": recommandation,
+    })
+
+
+@api.route('/users/<int:id>/recommandUser', methods=['GET'])
+def get_recommand_user(id):
+    recommands= json.loads(rdb1.get(id))
+    recommandation = []
+    for id,sim in recommands.items():
+        user = User.query.get_or_404(id)
+        avatar=get_avasta(user.avatar)
+        username=user.username
+        recommandation.append({"id":id,"avatar":avatar,"username":username,"sim":sim})
+    return jsonify({
+        "recommandation": recommandation
+    })
 
 
 

@@ -6,6 +6,7 @@ from markdown import markdown
 import bleach
 from flask import current_app, request, url_for
 from flask_login import UserMixin, AnonymousUserMixin
+# from app.api.users import get_avasta
 from app.exceptions import ValidationError
 from . import db
 
@@ -138,6 +139,7 @@ class User(UserMixin, db.Model):
                                 lazy='dynamic',
                                 cascade='all, delete-orphan')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    avatar=db.Column(db.String(200))
 
     @staticmethod
     def add_self_follows():
@@ -297,7 +299,7 @@ class User(UserMixin, db.Model):
             # 'url': url_for('api.get_user', id=self.id),
             'username': self.username,
             'userid': self.id,
-            'avatar': self.avatar_hash,
+            'avatar': url_for('static', filename=self.avatar),
             'about_me': self.about_me
             # 'member_since': self.member_since,
             # 'last_seen': self.last_seen,
@@ -312,7 +314,7 @@ class User(UserMixin, db.Model):
         json_user = {
             'username': self.username,
             'userid': self.id,
-            'avatar': self.avatar_hash,
+            'avatar': url_for('static', filename=self.avatar),
             'about_me': self.about_me,
             'member_since': self.member_since,
             'last_seen': self.last_seen,

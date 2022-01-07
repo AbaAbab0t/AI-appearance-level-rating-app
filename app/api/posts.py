@@ -8,7 +8,7 @@ from flask_cors import CORS, cross_origin
 
 
 @api.route('/posts/')#获取所有文章（分页）参数：page页数
-@cross_origin()
+# @cross_origin()
 def get_posts():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.paginate(
@@ -30,7 +30,7 @@ def get_posts():
 
 
 @api.route('/posts/<int:id>', methods=['GET'])#根据文章id获取文章
-@cross_origin()
+# @cross_origin()
 def get_post(id):
     post = Post.query.get_or_404(id)
     author = db.session.query(User).filter_by(id=post.author_id).first()
@@ -41,7 +41,7 @@ def get_post(id):
 
 
 @api.route('/posts/', methods=['POST'])#上传文章，返回存储位置及文章id
-@cross_origin()
+# @cross_origin()
 # @permission_required(Permission.WRITE)
 def new_post():
     post = Post.from_json(request.json)
@@ -55,7 +55,7 @@ def new_post():
 
 
 @api.route('/posts/<int:id>', methods=['PUT'])#编辑文章，返回修改后的文章内容（仅能修改文本）
-@cross_origin()
+# @cross_origin()
 @permission_required(Permission.WRITE)
 def edit_post(id):
     post = Post.query.get_or_404(id)

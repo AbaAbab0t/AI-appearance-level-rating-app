@@ -1,11 +1,12 @@
 from app import create_app, db
-from flask_migrate import Migrate, upgrade
+from flask_migrate import Migrate
 import click
 import sys
 import os
 from dotenv import load_dotenv
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 

@@ -93,7 +93,7 @@ def login():
     if user.verify_password(password):
         access_token = create_access_token(identity=user.id, fresh=True)
         refresh_token = create_refresh_token(user.id)
-        return jsonify({"access_token": access_token, "refresh_token": refresh_token}), 200
+        return jsonify({"access_token": "Bearer "+access_token, "refresh_token": "Bearer "+refresh_token, "user": user.to_json()}), 200
     else:
         return jsonify({"msg": "Bad username or password"}), 401
 
@@ -110,6 +110,7 @@ def refresh():
 @jwt_required()
 def modify_token():
     jti = get_jwt()["jti"]
+   
     now = datetime.now(timezone.utc)
     db.session.add(TokenBlocklist(jti=jti, created_at=now))
     db.session.commit()
@@ -119,4 +120,6 @@ def modify_token():
 @api.route("/auth/hello", methods=["GET"])
 @jwt_required()
 def hello():
-    return jsonify(hello="world")
+    jti=get_jwt()["jti"]
+    current_user=get_jwt_identity()
+    return jsonify(msg="Hello, {},{}".format(jti,current_user))

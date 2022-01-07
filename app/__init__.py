@@ -4,12 +4,18 @@ from config import config
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 import os
+import redis
 db = SQLAlchemy()
 jwt = JWTManager()
+pool0 = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True,db=0)
+pool1 = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True,db=1)
+rdb0 = redis.Redis(connection_pool=pool0) # redis db 0  保存人脸特征
+rdb1 = redis.Redis(connection_pool=pool1) # redis db 1 保存 推荐人列表,最多10个
 
 
 def create_app(config_name):
     app = Flask(__name__)
+    app.logger.debug(config_name)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
